@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ForumCenter.Pages.UserProfilePage"
+             Title="用户资料"
+             BackgroundColor="{StaticResource Background}">
+
+    <StackLayout Spacing="0">
+
+        <!-- 用户信息区 -->
+        <StackLayout Padding="16" Spacing="0">
+            <Label x:Name="UsernameLabel"
+                   FontSize="20"
+                   FontAttributes="Bold"
+                   TextColor="{StaticResource TextPrimary}"
+                   Margin="0,0,0,4" />
+
+            <Label x:Name="BioLabel"
+                   FontSize="14"
+                   TextColor="{StaticResource TextSecondary}"
+                   Margin="0,0,0,12" />
+
+            <Grid ColumnDefinitions="*,*,*" Margin="0,0,0,0">
+                <Label Grid.Column="0" x:Name="PostCountLabel" FontSize="14" TextColor="{StaticResource TextPrimary}" />
+                <Label Grid.Column="1" x:Name="CommentCountLabel" FontSize="14" TextColor="{StaticResource TextPrimary}" />
+                <Label Grid.Column="2" x:Name="ScoreLabel" FontSize="14" TextColor="{StaticResource TextPrimary}" />
+            </Grid>
+        </StackLayout>
+
+        <!-- 分隔线 -->
+        <BoxView HeightRequest="1" Color="{StaticResource Divider}" />
+
+        <!-- 帖子列表标题 -->
+        <Label Text="发布的帖子"
+               FontSize="16"
+               FontAttributes="Bold"
+               TextColor="{StaticResource TextPrimary}"
+               Margin="16" />
+
+        <!-- 帖子列表 -->
+        <ListView x:Name="PostsListView"
+                  HasUnevenRows="True"
+                  ItemTapped="OnPostTapped"
+                  BackgroundColor="Transparent"
+                  SeparatorVisibility="Default"
+                  Margin="0,0,0,0">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <StackLayout Padding="12" Spacing="4">
+                            <Label Text="{Binding Title}"
+                                   FontSize="16"
+                                   FontAttributes="Bold"
+                                   LineBreakMode="TailTruncation"
+                                   MaxLines="2" />
+                            <HorizontalStackLayout Spacing="12">
+                                <Label Text="{Binding CommentCount, StringFormat='{0}回复'}"
+                                       FontSize="12"
+                                       TextColor="{StaticResource TextSecondary}" />
+                                <Label Text="{Binding View, StringFormat='{0}浏览'}"
+                                       FontSize="12"
+                                       TextColor="{StaticResource TextSecondary}" />
+                            </HorizontalStackLayout>
+                        </StackLayout>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+
+        <ActivityIndicator x:Name="LoadingIndicator"
+                           IsRunning="False"
+                           Color="{StaticResource Primary}" />
+
+    </StackLayout>
+</ContentPage>

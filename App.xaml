@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Application xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ForumCenter.App"
+             xmlns:local="clr-namespace:ForumCenter">
+    <Application.Resources>
+        <ResourceDictionary>
+            <!-- 与原版 colors.xml 一致 -->
+            <Color x:Key="Primary">#3F51B5</Color>
+            <Color x:Key="PrimaryDark">#303F9F</Color>
+            <Color x:Key="Accent">#FF4081</Color>
+            <Color x:Key="Vote">#E91E63</Color>
+            <Color x:Key="Background">#F5F5F5</Color>
+            <Color x:Key="Card">#FFFFFF</Color>
+            <Color x:Key="TextPrimary">#212121</Color>
+            <Color x:Key="TextSecondary">#757575</Color>
+            <Color x:Key="Divider">#E0E0E0</Color>
+
+            <Style TargetType="Label">
+                <Setter Property="TextColor" Value="{StaticResource TextPrimary}" />
+            </Style>
+
+            <Style TargetType="Button">
+                <Setter Property="BackgroundColor" Value="{StaticResource Primary}" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="CornerRadius" Value="4" />
+                <Setter Property="Padding" Value="20,10" />
+            </Style>
+
+            <!-- Entry / Editor 样式：匹配原版 edit_text_bg（白底+圆角+内边距） -->
+            <Style TargetType="Entry">
+                <Setter Property="BackgroundColor" Value="{StaticResource Card}" />
+                <Setter Property="TextColor" Value="{StaticResource TextPrimary}" />
+                <Setter Property="PlaceholderColor" Value="{StaticResource TextSecondary}" />
+                <Setter Property="Margin" Value="0,0,0,12" />
+            </Style>
+
+            <Style TargetType="Editor">
+                <Setter Property="BackgroundColor" Value="{StaticResource Card}" />
+                <Setter Property="TextColor" Value="{StaticResource TextPrimary}" />
+                <Setter Property="PlaceholderColor" Value="{StaticResource TextSecondary}" />
+                <Setter Property="Margin" Value="0,0,0,12" />
+            </Style>
+
+            <!-- Picker 样式：匹配原版 Spinner edit_text_bg -->
+            <Style TargetType="Picker">
+                <Setter Property="BackgroundColor" Value="{StaticResource Card}" />
+                <Setter Property="TextColor" Value="{StaticResource TextPrimary}" />
+                <Setter Property="TitleColor" Value="{StaticResource TextSecondary}" />
+                <Setter Property="Margin" Value="0,0,0,12" />
+            </Style>
+
+            <Style TargetType="Frame" x:Key="CardFrame">
+                <Setter Property="BackgroundColor" Value="{StaticResource Card}" />
+                <Setter Property="CornerRadius" Value="0" />
+                <Setter Property="HasShadow" Value="False" />
+                <Setter Property="Padding" Value="12" />
+                <Setter Property="Margin" Value="0" />
+            </Style>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

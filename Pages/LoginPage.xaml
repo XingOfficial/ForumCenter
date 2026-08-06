@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ForumCenter.Pages.LoginPage"
+             Title="登录"
+             BackgroundColor="{StaticResource Background}">
+
+    <ScrollView>
+        <StackLayout Spacing="12" Padding="16" VerticalOptions="Center">
+
+            <!-- 社区选择 RadioButton 组（等宽分布，匹配原版 RadioGroup layout_weight=1） -->
+            <Grid ColumnDefinitions="*,*,*,*" Margin="0,16,0,16">
+                <RadioButton Grid.Column="0" x:Name="RbTatans" Content="天坦社区" CheckedChanged="OnCommunityRadioChanged" />
+                <RadioButton Grid.Column="1" x:Name="RbBangMang" Content="帮盲社区" CheckedChanged="OnCommunityRadioChanged" />
+                <RadioButton Grid.Column="2" x:Name="RbZhengDu" Content="争渡论坛" CheckedChanged="OnCommunityRadioChanged" />
+                <RadioButton Grid.Column="3" x:Name="RbAiMang" Content="爱盲论坛" CheckedChanged="OnCommunityRadioChanged" />
+            </Grid>
+
+            <Entry x:Name="UsernameEntry"
+                   Placeholder="请输入手机号"
+                   Keyboard="Text"
+                   Margin="0,0,0,12"
+                   AutomationProperties.Name="用户名输入框" />
+
+            <Entry x:Name="PasswordEntry"
+                   Placeholder="请输入密码"
+                   IsPassword="True"
+                   Margin="0,0,0,12"
+                   AutomationProperties.Name="密码输入框" />
+
+            <Button x:Name="LoginButton"
+                    Text="登录"
+                    Clicked="OnLoginClicked"
+                    Margin="0,24,0,0"
+                    AutomationProperties.Name="登录按钮" />
+
+            <ActivityIndicator x:Name="LoadingIndicator"
+                               IsRunning="False"
+                               Color="{StaticResource Primary}" />
+
+        </StackLayout>
+    </ScrollView>
+</ContentPage>

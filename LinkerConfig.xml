@@ -1,0 +1,26 @@
+<linker>
+  <!-- 保留整个 ForumCenter 程序集（包含 Activity、Application、Pages 等） -->
+  <assembly fullname="ForumCenter">
+    <type fullname="*" preserve="All" />
+  </assembly>
+
+  <!-- 保留 Newtonsoft.Json -->
+  <assembly fullname="Newtonsoft.Json">
+    <type fullname="*" preserve="All" />
+  </assembly>
+
+  <!-- 保留 MAUI 框架核心 -->
+  <assembly fullname="Microsoft.Maui.Controls">
+    <type fullname="*" preserve="All" />
+  </assembly>
+
+  <!-- 保留 System.Net.Http -->
+  <assembly fullname="System.Net.Http">
+    <type fullname="*" preserve="All" />
+  </assembly>
+
+  <!-- 保留 Preferences API -->
+  <assembly fullname="Microsoft.Maui.Essentials">
+    <type fullname="*" preserve="All" />
+  </assembly>
+</linker>

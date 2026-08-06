@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ForumCenter.Pages.PostCreatePage"
+             Title="发帖"
+             BackgroundColor="{StaticResource Background}">
+
+    <Grid RowDefinitions="*,Auto">
+
+        <ScrollView Grid.Row="0" Padding="16">
+            <StackLayout Spacing="12">
+
+                <!-- 板块选择标签 -->
+                <Label Text="选择板块" FontSize="15" TextColor="{StaticResource TextPrimary}" Margin="0,0,0,4" />
+
+                <!-- 板块选择器 -->
+                <Picker x:Name="SectionPicker"
+                        Title="选择板块"
+                        TitleColor="{StaticResource TextSecondary}"
+                        Margin="0,0,0,8"
+                        AutomationProperties.Name="板块选择" />
+
+                <!-- 标题输入 -->
+                <Entry x:Name="TitleEntry"
+                       Placeholder="请输入标题"
+                       AutomationProperties.Name="标题输入框" />
+
+                <!-- 内容输入 -->
+                <Editor x:Name="ContentEditor"
+                        Placeholder="请输入内容"
+                        HeightRequest="200"
+                        VerticalOptions="Start"
+                        AutomationProperties.Name="内容编辑框" />
+
+                <!-- 图片预览区 -->
+                <ScrollView x:Name="ImagePreviewScroll"
+                            Orientation="Horizontal"
+                            HeightRequest="100"
+                            IsVisible="False">
+                    <HorizontalStackLayout x:Name="ImagePreviewLayout" Spacing="8" />
+                </ScrollView>
+
+                <!-- 图片上传 + 发布按钮并排 -->
+                <Grid ColumnDefinitions="*,*" ColumnSpacing="8">
+                    <Button Grid.Column="0" x:Name="UploadImageButton" Text="上传图片" Clicked="OnUploadImageClicked" />
+                    <Button Grid.Column="1" x:Name="PublishButton" Text="发布" Clicked="OnPublishClicked" />
+                </Grid>
+
+            </StackLayout>
+        </ScrollView>
+
+        <ActivityIndicator Grid.Row="1" x:Name="LoadingIndicator" IsRunning="False" Color="{StaticResource Primary}" />
+    </Grid>
+</ContentPage>

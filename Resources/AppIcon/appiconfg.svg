@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
+  <!-- 对话气泡 -->
+  <path d="M64 30 C48 30 35 40 35 53 C35 66 48 76 64 76 C69 76 73 75 77 74 L88 80 L85 68 C90 64 93 59 93 53 C93 40 80 30 64 30 Z" fill="white"/>
+  <!-- 三条线代表文字 -->
+  <rect x="46" y="46" width="36" height="3" rx="1.5" fill="#2196F3"/>
+  <rect x="46" y="52" width="28" height="3" rx="1.5" fill="#2196F3"/>
+  <rect x="46" y="58" width="32" height="3" rx="1.5" fill="#2196F3"/>
+</svg>
