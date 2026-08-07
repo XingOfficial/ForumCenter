@@ -6,11 +6,11 @@ using ForumCenter.Utilities;
 
 namespace ForumCenter.Pages;
 
-/// <summary>
-/// 发帖/编辑页面。新建模式调用 CreatePostAsync，编辑模式（带 postId）预填内容后调用 EditPostAsync。
-/// 天坦社区用标签（Tags），帮盲社区用板块（Sections），争渡/爱盲用论坛（Forums）。
-/// 支持图片上传（仅天坦）、手动插入图片链接、发帖小尾巴（天坦/争渡用 &lt;br&gt;，爱盲用纯文本）。
-/// </summary>
+
+
+
+
+
 [QueryProperty("PostId", "postId")]
 public partial class PostCreatePage : ContentPage
 {
@@ -25,7 +25,7 @@ public partial class PostCreatePage : ContentPage
     private readonly List<Forum> _forums = new();
     private bool _initialized;
 
-    // 长按上传按钮检测：长按触发"插入图片链接"对话框（原版行为）
+    
     private DateTime _pressStartTime;
     private bool _longPressHandled;
 
@@ -43,7 +43,7 @@ public partial class PostCreatePage : ContentPage
     public PostCreatePage()
     {
         InitializeComponent();
-        // 长按上传按钮触发"插入图片链接"对话框（原版行为）
+        
         UploadImageButton.Pressed += OnUploadButtonPressed;
         UploadImageButton.Released += OnUploadButtonReleased;
         _ = InitAsync();
@@ -100,7 +100,7 @@ public partial class PostCreatePage : ContentPage
                     break;
             }
 
-            // 原版：上传按钮始终可见，非天坦社区点击时弹提示
+            
             if (IsEditMode)
                 await LoadForEditAsync();
         }
@@ -141,14 +141,14 @@ public partial class PostCreatePage : ContentPage
             return;
         }
 
-        // 帮盲社区不支持发帖
+        
         if (Api.CommunityType == CommunityType.BangMang)
         {
             await DisplayAlert("提示", "帮盲社区暂不支持发帖", "确定");
             return;
         }
 
-        // 追加发帖小尾巴：天坦和争渡用 <br> 连接，爱盲用 \n 连接纯文本小尾巴
+        
         var finalContent = content;
         if (_prefs.IsPostTailEnabled())
         {
@@ -157,13 +157,13 @@ public partial class PostCreatePage : ContentPage
             {
                 if (Api.CommunityType == CommunityType.AiMang)
                 {
-                    // 爱盲为纯文本，去除 HTML 标签后用换行连接
+                    
                     var plainTail = Regex.Replace(tail, @"<[^>]+>", "");
                     finalContent = $"{content}\n{plainTail}";
                 }
                 else
                 {
-                    // 天坦和争渡用 <br> 连接
+                    
                     finalContent = $"{content}<br>{tail}";
                 }
             }
@@ -203,7 +203,7 @@ public partial class PostCreatePage : ContentPage
         }
     }
 
-    /// <summary>根据当前社区解析标签/板块/论坛值。天坦传标签名，帮盲传板块 Id，争渡/爱盲传论坛 fid。</summary>
+    
     private string ResolveTagOrSection()
     {
         var idx = SectionPicker.SelectedIndex;
@@ -219,10 +219,10 @@ public partial class PostCreatePage : ContentPage
         };
     }
 
-    /// <summary>上传图片（仅天坦社区支持）。短按触发上传；长按则触发"插入图片链接"。</summary>
+    
     private async void OnUploadImageClicked(object? sender, EventArgs e)
     {
-        // 长按已触发"插入图片链接"对话框，跳过本次上传
+        
         if (_longPressHandled)
         {
             _longPressHandled = false;
@@ -265,7 +265,7 @@ public partial class PostCreatePage : ContentPage
         }
     }
 
-    /// <summary>手动插入图片链接（长按上传按钮触发，原版行为）。</summary>
+    
     private async Task InsertImageUrlAsync()
     {
         var url = await DisplayPromptAsync("插入图片链接", "输入图片URL", "插入", "取消", "https://example.com/image.png");
@@ -273,7 +273,7 @@ public partial class PostCreatePage : ContentPage
             InsertTextAtCursor($"<img src=\"{url}\" />");
     }
 
-    /// <summary>在内容编辑框末尾插入文本。</summary>
+    
     private void InsertTextAtCursor(string text)
     {
         var current = ContentEditor.Text ?? "";

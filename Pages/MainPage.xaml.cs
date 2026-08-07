@@ -6,9 +6,9 @@ using ForumCenter.Utilities;
 
 namespace ForumCenter.Pages;
 
-/// <summary>
-/// 论坛主页：社区切换、Tab 分类、帖子列表、下拉刷新、上拉加载、发帖入口。
-/// </summary>
+
+
+
 public partial class MainPage : ContentPage
 {
     private readonly PreferencesService _prefs = new();
@@ -62,7 +62,7 @@ public partial class MainPage : ContentPage
         var type = _prefs.GetCurrentCommunity();
         if (switchApi)
         {
-            // 切换当前社区对应的 API 服务实例
+            
             ApiServiceFactory.SetCurrent(type);
             _api = ApiServiceFactory.Current;
             _api.ClearCache();
@@ -94,7 +94,7 @@ public partial class MainPage : ContentPage
         {
             if (t == _tab)
             {
-                // 重复点击同一 Tab，滚动到顶部（原版 onTabReselected 行为）
+                
                 PostsListView.ScrollTo(0, position: ScrollToPosition.Start, animated: true);
                 return;
             }
@@ -113,11 +113,11 @@ public partial class MainPage : ContentPage
         for (var i = 0; i < buttons.Length; i++)
         {
             var active = buttons[i].ClassId == _tab;
-            // 原版 TabLayout：蓝色背景 + 白色文字，选中项加粗
+            
             buttons[i].BackgroundColor = Colors.Transparent;
             buttons[i].TextColor = Colors.White;
             buttons[i].FontAttributes = active ? FontAttributes.Bold : FontAttributes.None;
-            // 选中项显示白色下划线指示器
+            
             indicators[i].Color = active ? Colors.White : Colors.Transparent;
         }
     }
@@ -135,7 +135,7 @@ public partial class MainPage : ContentPage
     {
         base.OnAppearing();
 
-        // 原版 onResume：从登录页返回后同步社区选择器
+        
         var current = _prefs.GetCurrentCommunity();
         var expectedIndex = current switch
         {
@@ -175,7 +175,7 @@ public partial class MainPage : ContentPage
             var result = await _api.GetPostsAsync(_page, _tab);
             if (result != null)
             {
-                // 原版 PostAdapter：对摘要做 HTML 去标签 + 截断 80 字
+                
                 foreach (var p in result)
                 {
                     if (!string.IsNullOrEmpty(p.Content))
@@ -184,7 +184,7 @@ public partial class MainPage : ContentPage
                 _posts.AddRange(result);
             }
 
-            // 重新绑定以触发界面刷新
+            
             PostsListView.ItemsSource = null;
             PostsListView.ItemsSource = _posts;
 
@@ -209,7 +209,7 @@ public partial class MainPage : ContentPage
     {
         if (e.Item is not Post p || _posts.Count == 0) return;
 
-        // 滚动到底部自动加载更多
+        
         if (p.Id == _posts[^1].Id && _hasMore && !_isLoading)
         {
             _page++;
@@ -228,7 +228,7 @@ public partial class MainPage : ContentPage
 
     private async void OnCreatePostClicked(object? sender, EventArgs e)
     {
-        // 原版：直接跳转发帖页，在发帖时才检查登录
+        
         await Shell.Current.GoToAsync(nameof(PostCreatePage));
     }
 }

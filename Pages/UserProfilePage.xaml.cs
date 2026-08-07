@@ -3,9 +3,9 @@ using ForumCenter.Services;
 
 namespace ForumCenter.Pages;
 
-/// <summary>
-/// 用户资料页：展示用户基本信息与该用户发布的帖子列表。目前仅天坦社区支持完整资料与帖子查询。
-/// </summary>
+
+
+
 [QueryProperty("UserId", "userId")]
 [QueryProperty("UserName", "userName")]
 public partial class UserProfilePage : ContentPage
@@ -56,7 +56,7 @@ public partial class UserProfilePage : ContentPage
 
         try
         {
-            // 加载用户信息
+            
             if (Api.CommunityType == CommunityType.Tatans)
             {
                 var user = await Api.GetCurrentUserInfoAsync();
@@ -74,7 +74,7 @@ public partial class UserProfilePage : ContentPage
                 BioLabel.Text = $"{Api.DisplayName}暂不支持查看用户资料";
             }
 
-            // 加载用户帖子
+            
             if (Api.CommunityType == CommunityType.Tatans)
             {
                 var posts = await Api.GetPostsByUserAsync(_userId, _currentPage);

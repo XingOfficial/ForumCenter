@@ -3,9 +3,9 @@ using ForumCenter.Services;
 
 namespace ForumCenter.Pages;
 
-/// <summary>
-/// 登录页：通过 RadioButton 选择社区后调用对应社区的 LoginAsync，成功后保存 token 并返回。
-/// </summary>
+
+
+
 public partial class LoginPage : ContentPage
 {
     private readonly PreferencesService _prefs = new();
@@ -16,7 +16,7 @@ public partial class LoginPage : ContentPage
         InitCommunityRadio();
     }
 
-    /// <summary>根据持久化的当前社区，选中对应的 RadioButton 并初始化提示文字。</summary>
+    
     private void InitCommunityRadio()
     {
         var current = _prefs.GetCurrentCommunity();
@@ -39,15 +39,15 @@ public partial class LoginPage : ContentPage
         UpdateUsernamePlaceholder(GetSelectedCommunity());
     }
 
-    /// <summary>RadioButton 选中状态变化时，动态更新用户名输入框的提示文字。</summary>
+    
     private void OnCommunityRadioChanged(object? sender, CheckedChangedEventArgs e)
     {
-        // 只在选中时响应，避免取消选中时也触发
+        
         if (!e.Value) return;
         UpdateUsernamePlaceholder(GetSelectedCommunity());
     }
 
-    /// <summary>根据社区类型更新用户名输入框提示。</summary>
+    
     private void UpdateUsernamePlaceholder(CommunityType type)
     {
         UsernameEntry.Placeholder = type switch
@@ -59,7 +59,7 @@ public partial class LoginPage : ContentPage
         };
     }
 
-    /// <summary>获取当前选中的社区类型。</summary>
+    
     private CommunityType GetSelectedCommunity()
     {
         if (RbBangMang.IsChecked) return CommunityType.BangMang;
@@ -86,7 +86,7 @@ public partial class LoginPage : ContentPage
 
         try
         {
-            // 切换为当前社区对应的 API 服务实例，登录态保留在缓存实例中
+            
             ApiServiceFactory.SetCurrent(type);
             var api = ApiServiceFactory.Current;
 

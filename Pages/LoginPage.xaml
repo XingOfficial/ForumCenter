@@ -8,7 +8,7 @@
     <ScrollView>
         <StackLayout Spacing="12" Padding="16" VerticalOptions="Center">
 
-            <!-- 社区选择 RadioButton 组（等宽分布，匹配原版 RadioGroup layout_weight=1） -->
+            
             <Grid ColumnDefinitions="*,*,*,*" Margin="0,16,0,16">
                 <RadioButton Grid.Column="0" x:Name="RbTatans" Content="天坦社区" CheckedChanged="OnCommunityRadioChanged" />
                 <RadioButton Grid.Column="1" x:Name="RbBangMang" Content="帮盲社区" CheckedChanged="OnCommunityRadioChanged" />

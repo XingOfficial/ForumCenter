@@ -8,7 +8,7 @@
     <ScrollView>
         <StackLayout Spacing="0" Padding="16">
 
-            <!-- 账号区 -->
+            
             <Label Text="账号"
                    FontSize="16"
                    FontAttributes="Bold"
@@ -28,10 +28,10 @@
                         Padding="20,8" />
             </Grid>
 
-            <!-- 分隔线 -->
+            
             <BoxView HeightRequest="1" Color="{StaticResource Divider}" Margin="0,0,0,0" />
 
-            <!-- 显示设置区 -->
+            
             <Label Text="显示设置"
                    FontSize="16"
                    FontAttributes="Bold"
@@ -58,7 +58,7 @@
                        VerticalOptions="Center" />
             </Grid>
 
-            <!-- 发帖小尾巴 -->
+            
             <Grid ColumnDefinitions="*,Auto" Margin="0,16,0,0">
                 <Label Grid.Column="0"
                        Text="启用发帖小尾巴"

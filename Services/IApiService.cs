@@ -8,7 +8,7 @@ using System.Text;
 
 namespace ForumCenter.Services;
 
-/// <summary>API 服务接口</summary>
+
 public interface IApiService
 {
     CommunityType CommunityType { get; }
@@ -30,23 +30,23 @@ public interface IApiService
     string? GetToken();
     bool IsAdmin();
 
-    /// <summary>获取板块列表（争渡/爱盲等 Discuz! 论坛）</summary>
+    
     Task<List<Forum>> GetForumsAsync();
 
-    /// <summary>回复帖子（Discuz! 论坛，需 formHash）</summary>
+    
     Task<bool> ReplyAsync(long topicId, string content, string? formHash = null);
 
-    /// <summary>获取表单令牌 formhash（Discuz! 论坛）</summary>
+    
     Task<string?> GetFormHashAsync();
 
-    /// <summary>发帖（Discuz! 论坛，需 formHash）</summary>
+    
     Task<bool> CreateThreadAsync(string fid, string title, string content, string? formHash = null);
 
-    /// <summary>清除内存缓存（切换社区或刷新时调用）</summary>
+    
     void ClearCache();
 }
 
-/// <summary>API 服务工厂</summary>
+
 public static class ApiServiceFactory
 {
     private static IApiService? _current;
@@ -71,7 +71,7 @@ public static class ApiServiceFactory
     }
 }
 
-/// <summary>天坦社区 API 服务</summary>
+
 public class TatansApiService : IApiService
 {
     private const string BaseUrl = "https://bbs.tatans.cn";
@@ -114,7 +114,7 @@ public class TatansApiService : IApiService
         var resp = await _client.PostAsync($"{BaseUrl}/api/login", content);
         var body = await resp.Content.ReadAsStringAsync();
 
-        // 手动解析 JSON，因为 detail 是对象不是字符串
+        
         try
         {
             var root = JObject.Parse(body);
@@ -149,7 +149,7 @@ public class TatansApiService : IApiService
         }
         catch (Exception ex) when (ex.Message.Contains("登录"))
         {
-            throw; // 重新抛出已处理的错误
+            throw; 
         }
         catch (Exception ex)
         {
@@ -164,7 +164,7 @@ public class TatansApiService : IApiService
         var url = $"{BaseUrl}/api/index?pageNo={page}&tab={tab}&tagId={tagId}";
         var cacheKey = $"posts_{tab}_{page}_{tagId}";
 
-        // 第一页尝试读缓存（快速显示），同时仍发网络请求刷新
+        
         if (page == 1)
         {
             var cached = MemoryCache.Get(cacheKey);
@@ -175,7 +175,7 @@ public class TatansApiService : IApiService
                     var cachedResult = JsonConvert.DeserializeObject<ApiResponse<Page<Post>>>(cached);
                     if (cachedResult?.IsSuccess == true && cachedResult.Detail?.Records != null)
                     {
-                        // 先返回缓存数据，后台继续刷新
+                        
                         _ = RefreshCacheAsync(url, cacheKey);
                         return cachedResult.Detail.Records;
                     }
@@ -184,7 +184,7 @@ public class TatansApiService : IApiService
             }
         }
 
-        // 带重试的网络请求
+        
         var body = await GetWithRetryAsync(url);
         MemoryCache.Put(cacheKey, body);
         var result = JsonConvert.DeserializeObject<ApiResponse<Page<Post>>>(body);
@@ -192,7 +192,7 @@ public class TatansApiService : IApiService
         return result?.IsSuccess == true ? result.Detail?.Records ?? new() : new();
     }
 
-    /// <summary>后台刷新缓存（不阻塞 UI）</summary>
+    
     private async Task RefreshCacheAsync(string url, string cacheKey)
     {
         try
@@ -205,7 +205,7 @@ public class TatansApiService : IApiService
         catch { }
     }
 
-    /// <summary>带重试的 GET 请求（最多重试 2 次，5xx 服务器错误时递增延迟）</summary>
+    
     private async Task<string> GetWithRetryAsync(string url, int maxRetry = 2)
     {
         Exception? lastException = null;
@@ -214,7 +214,7 @@ public class TatansApiService : IApiService
             try
             {
                 var resp = await _client.GetAsync(url);
-                // 5xx 服务器错误时重试
+                
                 if ((int)resp.StatusCode >= 500 && (int)resp.StatusCode <= 599 && attempt < maxRetry)
                 {
                     await Task.Delay(500 * (attempt + 1));
@@ -342,13 +342,13 @@ public class TatansApiService : IApiService
 
         var resp = await _client.PostAsync($"{BaseUrl}/api/file/upload", form);
 
-        // 服务器返回 404 时提示不支持上传
+        
         if (resp.StatusCode == HttpStatusCode.NotFound)
             throw new Exception("服务器暂不支持图片上传");
 
         var body = await resp.Content.ReadAsStringAsync();
 
-        // detail 可能是字符串(url)或对象(含url字段)
+        
         try
         {
             var root = JObject.Parse(body);
@@ -379,19 +379,19 @@ public class TatansApiService : IApiService
         return null;
     }
 
-    /// <summary>天坦社区不支持板块列表接口</summary>
+    
     public Task<List<Forum>> GetForumsAsync() => Task.FromResult(new List<Forum>());
 
-    /// <summary>天坦社区使用 SendCommentAsync 回复，此方法返回 false</summary>
+    
     public Task<bool> ReplyAsync(long topicId, string content, string? formHash = null) => Task.FromResult(false);
 
-    /// <summary>天坦社区不需要 formhash</summary>
+    
     public Task<string?> GetFormHashAsync() => Task.FromResult<string?>(null);
 
-    /// <summary>天坦社区使用 CreatePostAsync 发帖，此方法返回 false</summary>
+    
     public Task<bool> CreateThreadAsync(string fid, string title, string content, string? formHash = null) => Task.FromResult(false);
 
-    /// <summary>清除内存缓存</summary>
+    
     public void ClearCache() => MemoryCache.Clear();
 
     private static string Md5(string input)
@@ -404,7 +404,7 @@ public class TatansApiService : IApiService
         .Replace("\n", "\\n").Replace("\r", "\\r").Replace("\t", "\\t");
 }
 
-/// <summary>帮盲社区 API 服务（bbs.abm365.cn）</summary>
+
 public class BangMangApiService : IApiService
 {
     private const string BaseUrl = "http://bbs.abm365.cn";
@@ -505,23 +505,23 @@ public class BangMangApiService : IApiService
     public Task<string?> UploadImageAsync(byte[] imageData, string fileName)
         => Task.FromResult<string?>(null);
 
-    /// <summary>帮盲社区不支持板块列表接口</summary>
+    
     public Task<List<Forum>> GetForumsAsync() => Task.FromResult(new List<Forum>());
 
-    /// <summary>帮盲社区回复接口暂未实现</summary>
+    
     public Task<bool> ReplyAsync(long topicId, string content, string? formHash = null) => Task.FromResult(false);
 
-    /// <summary>帮盲社区不需要 formhash</summary>
+    
     public Task<string?> GetFormHashAsync() => Task.FromResult<string?>(null);
 
-    /// <summary>帮盲社区发帖接口暂未实现</summary>
+    
     public Task<bool> CreateThreadAsync(string fid, string title, string content, string? formHash = null) => Task.FromResult(false);
 
-    /// <summary>帮盲社区不需要缓存</summary>
+    
     public void ClearCache() { }
 }
 
-/// <summary>爱盲论坛 API 服务（www.aimang.net，Discuz! mobile API）</summary>
+
 public class AiMangApiService : IApiService
 {
     private const string BaseUrl = "https://www.aimang.net";
@@ -540,7 +540,7 @@ public class AiMangApiService : IApiService
         _client = new HttpClient(handler) { Timeout = TimeSpan.FromSeconds(15) };
         _client.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Linux; Android 10)");
 
-        // 从持久化存储恢复登录 Cookie
+        
         try
         {
             var saved = new PreferencesService().GetAiMangCookie();
@@ -572,7 +572,7 @@ public class AiMangApiService : IApiService
     public bool IsLoggedIn() => !string.IsNullOrEmpty(_token);
     public bool IsAdmin() => false;
 
-    /// <summary>构建 Discuz! mobile API URL，自动附加 version=4</summary>
+    
     private static string BuildUrl(string module, Dictionary<string, string>? extra = null)
     {
         var param = $"module={module}&version=4";
@@ -582,7 +582,7 @@ public class AiMangApiService : IApiService
         return $"{BaseUrl}{ApiPath}?{param}";
     }
 
-    /// <summary>从响应中提取 Variables 对象</summary>
+    
     private static JObject? ExtractVariables(string body)
     {
         try
@@ -593,7 +593,7 @@ public class AiMangApiService : IApiService
         catch { return null; }
     }
 
-    /// <summary>将当前 Cookie 持久化到本地存储</summary>
+    
     private static void PersistCookies()
     {
         try
@@ -605,7 +605,7 @@ public class AiMangApiService : IApiService
         catch { }
     }
 
-    /// <summary>解析 Discuz! 写操作响应（login/sendreply/newthread 等）</summary>
+    
     private static bool ParseDiscuzWriteResponse(string body)
     {
         try
@@ -618,7 +618,7 @@ public class AiMangApiService : IApiService
                 if (msgVal.Contains("succeed") || msgVal.Contains("success")) return true;
                 return false;
             }
-            // 没有 Message 字段，存在 Variables 视为成功
+            
             return root["Variables"] != null;
         }
         catch { return false; }
@@ -652,7 +652,7 @@ public class AiMangApiService : IApiService
 
     public async Task<List<Post>> GetPostsAsync(int page, string tab)
     {
-        // tab 映射到不同的板块 fid
+        
         var fid = tab switch
         {
             "all" => "43",
@@ -735,7 +735,7 @@ public class AiMangApiService : IApiService
         };
     }
 
-    /// <summary>回复帖子（调用 sendreply 模块，自动获取 formhash）</summary>
+    
     public async Task<bool> SendCommentAsync(long topicId, string content, long? commentId = null)
     {
         var formHash = await GetFormHashAsync();
@@ -756,7 +756,7 @@ public class AiMangApiService : IApiService
         return ParseDiscuzWriteResponse(body);
     }
 
-    /// <summary>发帖（调用 newthread 模块，fid 作为板块）</summary>
+    
     public async Task<bool> CreatePostAsync(string title, string content, string tagOrSection)
     {
         if (string.IsNullOrEmpty(tagOrSection)) return false;
@@ -772,7 +772,7 @@ public class AiMangApiService : IApiService
     public Task<User?> GetCurrentUserInfoAsync() => Task.FromResult<User?>(null);
     public Task<string?> UploadImageAsync(byte[] imageData, string fileName) => Task.FromResult<string?>(null);
 
-    /// <summary>获取板块列表（调用 forumindex 模块）</summary>
+    
     public async Task<List<Forum>> GetForumsAsync()
     {
         var url = BuildUrl("forumindex");
@@ -790,7 +790,7 @@ public class AiMangApiService : IApiService
             .ToList();
     }
 
-    /// <summary>获取表单令牌 formhash（调用 forumindex 模块）</summary>
+    
     public async Task<string?> GetFormHashAsync()
     {
         var url = BuildUrl("forumindex");
@@ -800,7 +800,7 @@ public class AiMangApiService : IApiService
         return variables?["formhash"]?.ToString();
     }
 
-    /// <summary>回复帖子（Discuz! 标准回复接口，可传入 formhash）</summary>
+    
     public async Task<bool> ReplyAsync(long topicId, string content, string? formHash = null)
     {
         formHash ??= await GetFormHashAsync();
@@ -821,7 +821,7 @@ public class AiMangApiService : IApiService
         return ParseDiscuzWriteResponse(body);
     }
 
-    /// <summary>发帖（调用 newthread 模块，可传入 formhash）</summary>
+    
     public async Task<bool> CreateThreadAsync(string fid, string title, string content, string? formHash = null)
     {
         formHash ??= await GetFormHashAsync();
@@ -843,11 +843,11 @@ public class AiMangApiService : IApiService
         return ParseDiscuzWriteResponse(body);
     }
 
-    /// <summary>爱盲论坛不需要内存缓存</summary>
+    
     public void ClearCache() { }
 }
 
-/// <summary>争渡论坛 API 服务（Discuz! 论坛）</summary>
+
 public class ZhengDuApiService : IApiService
 {
     private const string BaseUrl = "https://www.zhengdu.cc";
@@ -895,7 +895,7 @@ public class ZhengDuApiService : IApiService
         var resp = await _client.PostAsync($"{BaseUrl}{ApiPath}", content);
         var body = await resp.Content.ReadAsStringAsync();
 
-        // Discuz! login returns JSON with cookie
+        
         try
         {
             var result = JsonConvert.DeserializeObject<Dictionary<string, object>>(body);
@@ -1066,7 +1066,7 @@ public class ZhengDuApiService : IApiService
     public Task<User?> GetCurrentUserInfoAsync() => Task.FromResult<User?>(null);
     public Task<string?> UploadImageAsync(byte[] imageData, string fileName) => Task.FromResult<string?>(null);
 
-    /// <summary>获取争渡论坛板块列表（调用 forumindex 模块）</summary>
+    
     public async Task<List<Forum>> GetForumsAsync()
     {
         var url = BuildUrl("forumindex");
@@ -1086,7 +1086,7 @@ public class ZhengDuApiService : IApiService
         catch { return new(); }
     }
 
-    /// <summary>获取争渡论坛表单令牌 formhash（调用 forumindex 模块）</summary>
+    
     public async Task<string?> GetFormHashAsync()
     {
         var url = BuildUrl("forumindex");
@@ -1100,7 +1100,7 @@ public class ZhengDuApiService : IApiService
         catch { return null; }
     }
 
-    /// <summary>回复争渡帖子（调用 sendreply 模块，可传入 formhash）</summary>
+    
     public async Task<bool> ReplyAsync(long topicId, string content, string? formHash = null)
     {
         formHash ??= await GetFormHashAsync();
@@ -1120,7 +1120,7 @@ public class ZhengDuApiService : IApiService
         return success;
     }
 
-    /// <summary>争渡论坛发帖（调用 newthread 模块，可传入 formhash）</summary>
+    
     public async Task<bool> CreateThreadAsync(string fid, string title, string content, string? formHash = null)
     {
         formHash ??= await GetFormHashAsync();
@@ -1141,12 +1141,12 @@ public class ZhengDuApiService : IApiService
         return success;
     }
 
-    /// <summary>解析争渡论坛的写操作响应（可能是 JSON 或 HTML alert）</summary>
+    
     private static (bool success, string message) ParseWriteResponse(string rawBody)
     {
         var body = rawBody.Trim().TrimStart('\uFEFF');
 
-        // 尝试 JSON
+        
         if (body.StartsWith('{') || body.StartsWith('['))
         {
             try
@@ -1164,7 +1164,7 @@ public class ZhengDuApiService : IApiService
             catch { }
         }
 
-        // 检测 HTML
+        
         if (body.Contains('<') || body.ToLower().Contains("<script"))
         {
             var alertMatch = System.Text.RegularExpressions.Regex.Match(
@@ -1183,7 +1183,7 @@ public class ZhengDuApiService : IApiService
         return (false, body.Length > 100 ? "操作失败" : body);
     }
 
-    /// <summary>争渡论坛不需要内存缓存</summary>
+    
     public void ClearCache() { }
 }
 

@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace ForumCenter.Services;
 
-/// <summary>本地设置管理</summary>
+
 public class PreferencesService
 {
     private const string KeyCommunity = "current_community";
@@ -72,10 +72,10 @@ public class PreferencesService
             Preferences.Set(key, token);
     }
 
-    /// <summary>获取爱盲论坛持久化的 Cookie（用于 Discuz! 会话恢复）</summary>
+    
     public string? GetAiMangCookie() => Preferences.Get(KeyAiMangCookie, null);
 
-    /// <summary>持久化爱盲论坛 Cookie</summary>
+    
     public void SetAiMangCookie(string? cookie)
     {
         if (string.IsNullOrEmpty(cookie))
@@ -84,10 +84,10 @@ public class PreferencesService
             Preferences.Set(KeyAiMangCookie, cookie);
     }
 
-    /// <summary>获取争渡论坛持久化的 Cookie</summary>
+    
     public string? GetZhengDuCookie() => Preferences.Get(KeyZhengDuCookie, null);
 
-    /// <summary>持久化争渡论坛 Cookie</summary>
+    
     public void SetZhengDuCookie(string? cookie)
     {
         if (string.IsNullOrEmpty(cookie))
@@ -119,7 +119,7 @@ public class PreferencesService
     public void SetPostTailContent(string content) => Preferences.Set(KeyPostTailContent, content);
 }
 
-/// <summary>GitHub Releases 更新检查服务</summary>
+
 public class GitHubApiService
 {
     private const string Repo = "XingOfficial/ForumCenter";
@@ -133,7 +133,7 @@ public class GitHubApiService
         _client.DefaultRequestHeaders.Add("Accept", "application/vnd.github+json");
     }
 
-    /// <summary>检查最新版本</summary>
+    
     public async Task<GitHubRelease> CheckUpdateAsync()
     {
         var url = $"https://api.github.com/repos/{Repo}/releases/latest";
@@ -154,7 +154,7 @@ public class GitHubApiService
         return release;
     }
 
-    /// <summary>获取所有版本</summary>
+    
     public async Task<List<GitHubRelease>> GetReleasesAsync()
     {
         var url = $"https://api.github.com/repos/{Repo}/releases";
@@ -164,7 +164,7 @@ public class GitHubApiService
         return JsonConvert.DeserializeObject<List<GitHubRelease>>(body) ?? new();
     }
 
-    /// <summary>比较版本号</summary>
+    
     private static bool IsNewerVersion(string remote, string current)
     {
         if (string.IsNullOrEmpty(remote)) return false;

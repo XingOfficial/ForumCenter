@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace ForumCenter.Models;
 
-/// <summary>社区类型</summary>
+
 public enum CommunityType
 {
     Tatans,
@@ -12,7 +12,7 @@ public enum CommunityType
     AiMang
 }
 
-/// <summary>帖子列表项（通用模型）</summary>
+
 public class Post
 {
     public long Id { get; set; }
@@ -30,7 +30,7 @@ public class Post
     public string? SectionName { get; set; }
 }
 
-/// <summary>帖子详情聚合</summary>
+
 public class PostDetail
 {
     public Topic? Topic { get; set; }
@@ -38,7 +38,7 @@ public class PostDetail
     public List<Comment>? Comments { get; set; }
 }
 
-/// <summary>主题详情</summary>
+
 public class Topic
 {
     public int Id { get; set; }
@@ -55,7 +55,7 @@ public class Topic
     public string? LastCommentTime { get; set; }
 }
 
-/// <summary>评论</summary>
+
 public class Comment
 {
     public long Id { get; set; }
@@ -68,7 +68,7 @@ public class Comment
     public long? CommentId { get; set; }
 }
 
-/// <summary>用户信息</summary>
+
 public class User
 {
     public int Id { get; set; }
@@ -82,14 +82,14 @@ public class User
     public bool IsAdmin { get; set; }
 }
 
-/// <summary>标签</summary>
+
 public class Tag
 {
     public int Id { get; set; }
     public string? Name { get; set; }
 }
 
-/// <summary>板块</summary>
+
 public class Section
 {
     public int Id { get; set; }
@@ -97,7 +97,7 @@ public class Section
     public string? Description { get; set; }
 }
 
-/// <summary>通用API响应（天坦社区）</summary>
+
 public class ApiResponse<T>
 {
     [JsonProperty("code")]
@@ -110,7 +110,7 @@ public class ApiResponse<T>
     public bool IsSuccess => Code == 200 && Detail != null;
 }
 
-/// <summary>通用分页（天坦社区）</summary>
+
 public class Page<T>
 {
     [JsonProperty("records")]
@@ -125,7 +125,7 @@ public class Page<T>
     public int Pages { get; set; }
 }
 
-/// <summary>帮盲社区API响应</summary>
+
 public class BangMangResponse<T>
 {
     [JsonProperty("code")]
@@ -138,7 +138,7 @@ public class BangMangResponse<T>
     public bool IsSuccess => Code == 0 && Data != null;
 }
 
-/// <summary>帮盲社区分页</summary>
+
 public class BangMangPage<T>
 {
     [JsonProperty("pageNum")]
@@ -153,7 +153,7 @@ public class BangMangPage<T>
     public List<T>? List { get; set; }
 }
 
-/// <summary>帮盲社区帖子</summary>
+
 public class BangMangPost
 {
     [JsonProperty("id")] public int Id { get; set; }
@@ -195,7 +195,7 @@ public class BangMangPost
     };
 }
 
-/// <summary>帮盲社区帖子详情</summary>
+
 public class BangMangPostDetail
 {
     [JsonProperty("id")] public int Id { get; set; }
@@ -244,21 +244,21 @@ public class BangMangPostDetail
     };
 }
 
-/// <summary>通用板块（争渡/爱盲）</summary>
+
 public class Forum
 {
     public string Id { get; set; } = "";
     public string Name { get; set; } = "";
 }
 
-/// <summary>爱盲论坛板块信息（Discuz! API）</summary>
+
 public class AiMangForum
 {
     [JsonProperty("fid")] public string Fid { get; set; } = "";
     [JsonProperty("name")] public string Name { get; set; } = "";
 }
 
-/// <summary>爱盲论坛帖子列表项（Discuz! API）</summary>
+
 public class AiMangThread
 {
     [JsonProperty("tid")] public string Tid { get; set; } = "";
@@ -278,7 +278,7 @@ public class AiMangThread
     public int AuthorIdInt => int.TryParse(AuthorId, out var a) ? a : 0;
 }
 
-/// <summary>爱盲论坛帖子楼层（Discuz! API）</summary>
+
 public class AiMangPost
 {
     [JsonProperty("pid")] public string Pid { get; set; } = "";
@@ -297,7 +297,7 @@ public class AiMangPost
     public long DbDatelineLong => long.TryParse(DbDateline, out var d) ? d : 0;
 }
 
-/// <summary>爱盲论坛帖子详情聚合（Discuz! API）</summary>
+
 public class AiMangThreadDetail
 {
     public AiMangThread? Thread { get; set; }
@@ -305,7 +305,7 @@ public class AiMangThreadDetail
     public string Fid { get; set; } = "";
 }
 
-/// <summary>GitHub Release 信息</summary>
+
 public class GitHubRelease
 {
     [JsonProperty("tag_name")] public string? TagName { get; set; }
@@ -319,7 +319,7 @@ public class GitHubRelease
     public string? DownloadUrl { get; set; }
 }
 
-/// <summary>GitHub Release 资产</summary>
+
 public class GitHubAsset
 {
     [JsonProperty("name")] public string? Name { get; set; }

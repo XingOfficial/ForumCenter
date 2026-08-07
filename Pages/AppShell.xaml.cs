@@ -8,7 +8,7 @@ public partial class AppShell : Shell
     {
         InitializeComponent();
 
-        // 注册子页面路由，使 Shell.Current.GoToAsync 可正常跳转
+        
         Routing.RegisterRoute(nameof(PostDetailPage), typeof(PostDetailPage));
         Routing.RegisterRoute(nameof(PostCreatePage), typeof(PostCreatePage));
         Routing.RegisterRoute(nameof(LoginPage), typeof(LoginPage));

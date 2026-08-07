@@ -5,7 +5,7 @@
              xmlns:local="clr-namespace:ForumCenter">
     <Application.Resources>
         <ResourceDictionary>
-            <!-- 与原版 colors.xml 一致 -->
+            
             <Color x:Key="Primary">#3F51B5</Color>
             <Color x:Key="PrimaryDark">#303F9F</Color>
             <Color x:Key="Accent">#FF4081</Color>
@@ -27,7 +27,7 @@
                 <Setter Property="Padding" Value="20,10" />
             </Style>
 
-            <!-- Entry / Editor 样式：匹配原版 edit_text_bg（白底+圆角+内边距） -->
+            
             <Style TargetType="Entry">
                 <Setter Property="BackgroundColor" Value="{StaticResource Card}" />
                 <Setter Property="TextColor" Value="{StaticResource TextPrimary}" />
@@ -42,7 +42,7 @@
                 <Setter Property="Margin" Value="0,0,0,12" />
             </Style>
 
-            <!-- Picker 样式：匹配原版 Spinner edit_text_bg -->
+            
             <Style TargetType="Picker">
                 <Setter Property="BackgroundColor" Value="{StaticResource Card}" />
                 <Setter Property="TextColor" Value="{StaticResource TextPrimary}" />

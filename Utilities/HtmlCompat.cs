@@ -2,22 +2,22 @@ using System.Text.RegularExpressions;
 
 namespace ForumCenter.Utilities;
 
-/// <summary>
-/// HTML 兼容工具 - 移植自 Kotlin HtmlCompat.kt
-/// </summary>
+
+
+
 public static class HtmlCompat
 {
     private static readonly Regex HtmlTagRegex = new(@"<[^>]+>", RegexOptions.Compiled);
 
-    /// <summary>
-    /// 解析 HTML 为纯文本（降级安全处理）
-    /// </summary>
+    
+    
+    
     public static string ParseHtml(string? html)
     {
         if (string.IsNullOrEmpty(html)) return "";
         try
         {
-            // .NET MAUI 没有 Html.fromHtml，用正则去除标签
+            
             var text = HtmlTagRegex.Replace(html, "");
             return System.Net.WebUtility.HtmlDecode(text);
         }
@@ -34,10 +34,10 @@ public static class HtmlCompat
         }
     }
 
-    /// <summary>
-    /// 安全解析布尔值：兼容 Boolean / Int / String 类型
-    /// 移植自 Kotlin parseBool 扩展函数
-    /// </summary>
+    
+    
+    
+    
     public static bool ParseBool(object? value)
     {
         return value switch

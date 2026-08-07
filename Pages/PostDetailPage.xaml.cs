@@ -6,10 +6,10 @@ using ForumCenter.Utilities;
 
 namespace ForumCenter.Pages;
 
-/// <summary>
-/// 帖子详情页：展示标题/作者/时间/正文、点赞/浏览统计、评论列表，
-/// 支持发送评论（含楼中楼回复）、点赞、编辑/删除（带权限检查）、查看用户资料、发帖小尾巴、局部刷新评论。
-/// </summary>
+
+
+
+
 [QueryProperty("PostId", "postId")]
 public partial class PostDetailPage : ContentPage
 {
@@ -20,7 +20,7 @@ public partial class PostDetailPage : ContentPage
     private PostDetail? _detail;
     private int _currentUserId;
 
-    /// <summary>当前回复的目标评论（楼中楼），为 null 表示普通回复主题。</summary>
+    
     private Comment? _replyToComment;
 
     public string PostId
@@ -55,7 +55,7 @@ public partial class PostDetailPage : ContentPage
         {
             _detail = await Api.GetPostDetailAsync(_postId);
 
-            // 尝试获取当前用户用于作者权限判断
+            
             try
             {
                 var me = await Api.GetCurrentUserInfoAsync();
@@ -89,20 +89,20 @@ public partial class PostDetailPage : ContentPage
         AuthorLabel.Text = user?.Username ?? "";
         TimeLabel.Text = FormatTime(topic?.InTime);
 
-        // 正文：将 HTML 内容转为纯文本展示
+        
         ContentLabel.Text = TextUtil.HtmlToPlainText(topic?.Content ?? "");
 
-        // 点赞数：从 UpIds 解析（逗号分隔的用户 Id 列表）
+        
         var upIds = topic?.UpIds;
         var likeCount = string.IsNullOrEmpty(upIds)
             ? 0
             : upIds.Split(",", StringSplitOptions.RemoveEmptyEntries).Length;
         LikeCountLabel.Text = likeCount > 0 ? likeCount.ToString() : "";
 
-        // 浏览量
+        
         ViewCountLabel.Text = topic?.View is int v && v > 0 ? $"浏览 {v}" : "";
 
-        // 原版：帮盲社区隐藏评论输入框、评论列表，显示不支持提示
+        
         if (Api.CommunityType == CommunityType.BangMang)
         {
             CommentInputArea.IsVisible = false;
@@ -135,7 +135,7 @@ public partial class PostDetailPage : ContentPage
 
     private StackLayout CreateCommentView(Comment c)
     {
-        // 原版 item_comment.xml：padding=12dp，垂直排列，marginTop=6dp
+        
         var layout = new StackLayout
         {
             Spacing = 6,
@@ -149,7 +149,7 @@ public partial class PostDetailPage : ContentPage
             FontSize = 13,
             TextColor = GetColor("Primary")
         };
-        // 点击评论作者名也可跳转资料
+        
         authorLabel.GestureRecognizers.Add(new TapGestureRecognizer
         {
             Command = new Command(() => _ = GoToUserProfileAsync(c.UserId, c.Username))
@@ -172,7 +172,7 @@ public partial class PostDetailPage : ContentPage
             LineBreakMode = LineBreakMode.WordWrap
         });
 
-        // 点击评论项弹出操作菜单（回复 / 查看资料）
+        
         var tap = new TapGestureRecognizer();
         tap.Tapped += async (s, e) => await OnCommentTappedAsync(c);
         layout.GestureRecognizers.Add(tap);
@@ -180,7 +180,7 @@ public partial class PostDetailPage : ContentPage
         return layout;
     }
 
-    /// <summary>点击评论项弹出操作菜单。</summary>
+    
     private async Task OnCommentTappedAsync(Comment c)
     {
         var action = await DisplayActionSheet(c.Username, "取消", null, "回复", "查看资料");
@@ -197,7 +197,7 @@ public partial class PostDetailPage : ContentPage
         }
     }
 
-    /// <summary>跳转到用户资料页。</summary>
+    
     private async Task GoToUserProfileAsync(int userId, string userName)
     {
         if (userId <= 0)
@@ -208,7 +208,7 @@ public partial class PostDetailPage : ContentPage
         await Shell.Current.GoToAsync($"{nameof(UserProfilePage)}?userId={userId}&userName={Uri.EscapeDataString(userName)}");
     }
 
-    /// <summary>点击帖子作者名跳转用户资料。</summary>
+    
     private async void OnAuthorTapped(object? sender, TappedEventArgs e)
     {
         var topic = _detail?.Topic;
@@ -217,7 +217,7 @@ public partial class PostDetailPage : ContentPage
         await GoToUserProfileAsync(userId, userName);
     }
 
-    /// <summary>点赞。</summary>
+    
     private async void OnLikeClicked(object? sender, EventArgs e)
     {
         if (!_prefs.IsLoggedIn())
@@ -228,7 +228,7 @@ public partial class PostDetailPage : ContentPage
             return;
         }
 
-        // 原版：非天坦社区点击弹 Toast"XX暂不支持点赞"（按钮始终可见）
+        
         if (Api.CommunityType != CommunityType.Tatans)
         {
             await DisplayAlert("提示", $"{Api.DisplayName}暂不支持点赞", "确定");
@@ -275,7 +275,7 @@ public partial class PostDetailPage : ContentPage
             return;
         }
 
-        // 追加发帖小尾巴：天坦和争渡用 <br> 连接，爱盲用 \n 连接纯文本小尾巴
+        
         var finalContent = content;
         if (_prefs.IsPostTailEnabled())
         {
@@ -284,19 +284,19 @@ public partial class PostDetailPage : ContentPage
             {
                 if (Api.CommunityType == CommunityType.AiMang)
                 {
-                    // 爱盲为纯文本，去除 HTML 标签后用换行连接
+                    
                     var plainTail = Regex.Replace(tail, @"<[^>]+>", "");
                     finalContent = $"{content}\n{plainTail}";
                 }
                 else
                 {
-                    // 天坦和争渡用 <br> 连接
+                    
                     finalContent = $"{content}<br>{tail}";
                 }
             }
         }
 
-        // 楼中楼回复传入目标评论 Id
+        
         long? replyCommentId = _replyToComment?.Id;
 
         SendButton.IsEnabled = false;
@@ -305,13 +305,13 @@ public partial class PostDetailPage : ContentPage
             var ok = await Api.SendCommentAsync(_postId, finalContent, replyCommentId);
             if (ok)
             {
-                // 在清空 _replyToComment 之前保存回复目标用户名
+                
                 var replyToName = _replyToComment?.Username;
                 CommentEntry.Text = "";
                 _replyToComment = null;
                 CommentEntry.Placeholder = "写评论...";
 
-                // 局部刷新：直接在评论列表末尾插入新评论，不重新加载整个详情
+                
                 AppendLocalComment(content, replyToName);
             }
             else
@@ -329,10 +329,10 @@ public partial class PostDetailPage : ContentPage
         }
     }
 
-    /// <summary>局部刷新：在评论列表末尾追加刚发送的评论，避免重新拉取整个详情。</summary>
+    
     private void AppendLocalComment(string content, string? replyToName)
     {
-        // 若当前显示的是"暂无评论"占位，先清空
+        
         if (CommentsContainer.Children.Count == 1 &&
             CommentsContainer.Children[0] is Label placeholder &&
             placeholder.Text == "暂无评论")
@@ -340,7 +340,7 @@ public partial class PostDetailPage : ContentPage
             CommentsContainer.Children.Clear();
         }
 
-        // 原版：回复评论时显示"回复 {用户名}: {内容}"前缀
+        
         var newComment = new Comment
         {
             Id = 0,
@@ -351,7 +351,7 @@ public partial class PostDetailPage : ContentPage
             InTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds()
         };
 
-        // 同步更新内存中的评论列表
+        
         if (_detail?.Comments == null)
             _detail!.Comments = new List<Comment>();
         _detail.Comments.Add(newComment);
