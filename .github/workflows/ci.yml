@@ -15,12 +15,20 @@ jobs:
         run: |
           dotnet workload install maui
           dotnet workload restore
+      - name: Decode keystore
+        run: |
+          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > forumcenter.jks
       - name: Restore dependencies
         run: dotnet restore
       - name: Build
         run: dotnet build --no-restore --configuration Release
-      - name: Publish APK (unsigned)
-        run: dotnet publish -f net9.0-android -c Release -p:AndroidPackageFormat=apk -p:AndroidKeyStore=false --no-restore
+      - name: Publish APK (signed)
+        run: dotnet publish -f net9.0-android -c Release -p:AndroidPackageFormat=apk --no-restore
+        env:
+          AndroidSigningKeyStore: forumcenter.jks
+          AndroidSigningStorePass: ${{ secrets.KEYSTORE_PASSWORD }}
+          AndroidSigningKeyAlias: ${{ secrets.KEY_ALIAS }}
+          AndroidSigningKeyPass: ${{ secrets.KEY_PASSWORD }}
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
