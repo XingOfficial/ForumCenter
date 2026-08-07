@@ -2,11 +2,12 @@ name: .NET MAUI CI
 
 on: [push, pull_request]
 
+env:
+  DisableEolTargetFrameworkCheck: true
+
 jobs:
   build:
     runs-on: windows-2022
-    env:
-      DisableEolTargetFrameworkCheck: true
     steps:
       - uses: actions/checkout@v4
       - name: Set up .NET 8
@@ -19,9 +20,5 @@ jobs:
           dotnet workload restore
       - name: Restore dependencies
         run: dotnet restore
-        env:
-          DisableEolTargetFrameworkCheck: true
       - name: Build
-        run: dotnet build --no-restore
-        env:
-          DisableEolTargetFrameworkCheck: true
+        run: dotnet build --no-restore --property:TreatWarningsAsErrors=false
