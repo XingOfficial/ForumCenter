@@ -2,23 +2,20 @@ name: .NET MAUI CI
 
 on: [push, pull_request]
 
-env:
-  DisableEolTargetFrameworkCheck: true
-
 jobs:
   build:
     runs-on: windows-2022
     steps:
       - uses: actions/checkout@v4
-      - name: Set up .NET 8
+      - name: Set up .NET 9
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '8.0.x'
+          dotnet-version: '9.0.x'
       - name: Install MAUI workloads
         run: |
-          dotnet workload install maui --version 8.0.100
+          dotnet workload install maui
           dotnet workload restore
       - name: Restore dependencies
         run: dotnet restore
       - name: Build
-        run: dotnet build --no-restore --property:TreatWarningsAsErrors=false
+        run: dotnet build --no-restore
