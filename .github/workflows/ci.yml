@@ -16,8 +16,10 @@ jobs:
           dotnet workload install maui
           dotnet workload restore
       - name: Decode keystore
+        shell: pwsh
         run: |
-          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > forumcenter.jks
+          $bytes = [Convert]::FromBase64String("${{ secrets.KEYSTORE_BASE64 }}")
+          [IO.File]::WriteAllBytes("forumcenter.jks", $bytes)
       - name: Restore dependencies
         run: dotnet restore
       - name: Build
